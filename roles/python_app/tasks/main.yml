@@ -1,0 +1,35 @@
+---
+- name: Установить git и docker
+  apt:
+    name:
+      - git
+      - docker.io
+    state: present
+    update_cache: true
+  become: true
+
+- name: Клонировать репозиторий с приложением
+  git:
+    repo: https://github.com/Allower9/test-python.git
+    dest: /opt/test-python
+    version: main
+  become: true
+
+- name: Построить Docker-образ приложения
+  community.docker.docker_image:
+    name: test-python
+    source: build
+    build:
+      path: /opt/test-python
+  become: true
+
+- name: Запустить контейнер приложения
+  community.docker.docker_container:
+    name: test-python
+    image: test-python
+    state: started
+    restart_policy: always
+    published_ports:
+      - "8000:8000"
+  become: true
+

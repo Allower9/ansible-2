@@ -1,0 +1,15 @@
+---
+- name: Настройка веб-сервера
+  hosts: web
+  become: true
+  roles:
+    - nginx
+    - static_site
+    - python_app
+
+- name: Настройка базы данных
+  hosts: db
+  become: true
+  roles:
+    - postgresql
+
